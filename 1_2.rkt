@@ -165,10 +165,10 @@
                   (* a q)
                   (* a p))
                (+ (* b p)
-                  (* a q)
+                  (* a q))
                   p
                   q
-                  (- count 1))))))
+                  (- count 1)))))
 
 ;1.20
 (define (gcd a b)
@@ -209,15 +209,15 @@
   (try-it (+ 1 (random (- n 1)))))
 
 (define (fast-prime? n times)
-  (cond ((times 0) true)
+  (cond ((= times 0) true)
         ((fermat-test n)
          (fast-prime? n (- times 1)))
         (else false)))
          
 ;1.21
-(smallest-divisor 199) ;199
-(smallest-divisor 1999) ;1999
-(smallest-divisor 19999) ;7
+;(smallest-divisor 199) ;199
+;(smallest-divisor 1999) ;1999
+;(smallest-divisor 19999) ;7
 
 ;1.22
 (define (timed-prime-test n)
@@ -236,4 +236,62 @@
   (display " *** ")
   (display elapsed-time))
 
-;(define (search-for-primes n)
+; 生成连续奇数
+(define (next-odd n)
+  (if (odd? n)
+      (+ n 2)
+      (+ n 1)))
+
+; 生成从 start 开始的连续 count 个素数
+(define (continue-primes start count)
+  (cond ((= count 0) (display "are primes."))
+        ((prime? start)
+         (display start)
+         (newline)
+         (continue-primes (next-odd start) (- count 1)))
+        (else
+         (continue-primes (next-odd start) count))))
+
+(define (search-for-primes n)
+  (continue-primes n 3)
+  (newline))
+
+(define (search-for-primes- start count)
+  (cond ((= count 0) (newline))
+        ((timed-prime-test start) (search-for-primes- (next-odd start) (- count 1)))
+        (else (search-for-primes- (next-odd start) count))))
+
+
+;1.23
+; 调用 next 过程会造成时间消耗，虽然步数少了一半，但因为调用的存在运行时间并不是减少两倍，
+; 将 next 过程换成表达式后可以发现，运行时间确实减半.
+(define (find-divisor-pro n test)
+  (cond ((> (* test test) n) n)
+        ((divides? n test) test)
+        (else (find-divisor-pro n (+ test 2))))) ; 直接加2,不再调用next过程
+
+(define (smallest-divisor-pro n)
+  (find-divisor-pro n 3)) ;; 直接从3开始
+
+(define (prime?-pro n)
+  (= n (smallest-divisor-pro n)))
+
+;1.24
+(define (timed-fast-prime-test n)
+  (newline)
+  (display n)
+  (start-fast-prime-test n (current-inexact-milliseconds)))
+
+(define (start-fast-prime-test n start-time)
+  (if (fast-prime? n 3)
+      (report-prime (- (current-inexact-milliseconds) start-time))
+  #f))
+
+;1.25
+; 见脚注 46 p34
+
+;1.26
+; 显式使用乘法，expmod 执行两次递归调用
+; 原本的 expmod 在每次 exp 为偶数时,可以将计算量减少一半
+
+;1.27
