@@ -48,7 +48,7 @@
                (fun-rec (- n 1))
                (* 2 (fun-rec (- n 2)))
                (* 3 (fun-rec (- n 3)))))))
-       
+
 (define (fun-iter a b c n)
   (cond ((= n 0) a)
         ((= n 1) b)
@@ -175,7 +175,7 @@
     (if (= b 0)
         a
         (gcd b (remainder a b))))
-  
+
 
 ;素数检测
 (define (smallest-divisor n)
@@ -213,7 +213,7 @@
         ((fermat-test n)
          (fast-prime? n (- times 1)))
         (else false)))
-         
+
 ;1.21
 ;(smallest-divisor 199) ;199
 ;(smallest-divisor 1999) ;1999
